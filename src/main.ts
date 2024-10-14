@@ -2,7 +2,7 @@ import "./style.css";
 
 const app: HTMLDivElement = document.querySelector("#app")!;
 
-const gameName = "Hot Cakes!";
+const gameName = "Baby Stacks!";
 document.title = gameName;
 
 // Create header
@@ -21,8 +21,14 @@ const counterDisplay = document.createElement("div");
 counterDisplay.innerHTML = `Pancake Stacks: ${counter}`;
 app.append(counterDisplay);
 
-// Event listener to increment the counter
+// Event listener to increment the counter on button click
 button.addEventListener("click", () => {
-  counter += 1; // Increment counter
-  counterDisplay.innerHTML = `Pancakes: ${counter}`; // Update display
+  counter += 1; 
+  counterDisplay.innerHTML = `Pancake Stacks: ${counter}`; 
 });
+
+
+setInterval(() => {
+  counter += 1; 
+  counterDisplay.innerHTML = `Pancake Stacks: ${counter}`; 
+}, 1000); 
