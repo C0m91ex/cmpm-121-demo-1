@@ -16,32 +16,56 @@ button.innerHTML = "🥞";
 app.append(button);
 
 // Create a counter display
-let counter: number = 0;
+let counter: number = 0; // Initialize counter
 const counterDisplay = document.createElement("div");
-counterDisplay.innerHTML = `Pancake Stacks: ${counter}`;
+counterDisplay.innerHTML = `Pancakes: ${counter}`;
 app.append(counterDisplay);
 
 // Event listener to increment the counter on button click
 button.addEventListener("click", () => {
-  counter += 1; // Increment counter by 1
-  counterDisplay.innerHTML = `Pancake Stacks: ${counter}`;
+  counter += 1; 
+  counterDisplay.innerHTML = `Pancakes: ${counter}`; 
 });
 
 // Variables for tracking time
 let lastTime: number = performance.now();
-const incrementPerSecond = 1;
+let growthRate = 0; 
+
+// Create upgrade button
+const upgradeButton = document.createElement("button");
+upgradeButton.innerHTML = "💲 Buy Upgrade (+1 growth rate)";
+upgradeButton.disabled = true; 
+app.append(upgradeButton);
+
+// Function to update upgrade button state
+function updateUpgradeButton() {
+  upgradeButton.disabled = counter < 10; 
+}
 
 // Animation loop
 function animate(time: number) {
-  const deltaTime = time - lastTime;
-  lastTime = time;
+  const deltaTime = time - lastTime; 
+  lastTime = time; 
 
   // Update the counter based on time elapsed
-  counter += (incrementPerSecond * deltaTime) / 1000;
-  counterDisplay.innerHTML = `Pancake Stacks: ${Math.floor(counter)}`;
+  counter += (growthRate * deltaTime) / 1000; 
+  counterDisplay.innerHTML = `Pancakes: ${Math.floor(counter)}`; 
 
-  requestAnimationFrame(animate); // Request next frame
+ 
+  updateUpgradeButton();
+
+  requestAnimationFrame(animate); 
 }
 
 // Start the animation loop
 requestAnimationFrame(animate);
+
+// Event listener for upgrade button purchase
+upgradeButton.addEventListener("click", () => {
+  if (counter >= 10) {
+    counter -= 10; 
+    growthRate += 1; 
+    counterDisplay.innerHTML = `Pancakes: ${Math.floor(counter)}`; 
+    updateUpgradeButton(); 
+  }
+});
