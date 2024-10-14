@@ -23,11 +23,26 @@ app.append(counterDisplay);
 
 // Event listener to increment the counter on button click
 button.addEventListener("click", () => {
-  counter += 1;
-  counterDisplay.innerHTML = `Pancake Stacks: ${counter}`;
+  counter += 1; // Increment counter by 1
+  counterDisplay.innerHTML = `Pancake Stacks: ${counter}`; // Update display
 });
 
-setInterval(() => {
-  counter += 1;
-  counterDisplay.innerHTML = `Pancake Stacks: ${counter}`;
-}, 1000);
+// Variables for tracking time
+let lastTime: number = performance.now();
+const incrementPerSecond = 1; // Counter increment rate
+const incrementPerFrame = incrementPerSecond / 1000; // Default increment rate
+
+// Animation loop
+function animate(time: number) {
+  const deltaTime = time - lastTime; // Calculate time since last frame
+  lastTime = time; // Update last time to the current frame time
+
+  // Update the counter based on time elapsed
+  counter += (incrementPerSecond * deltaTime) / 1000; // Increment counter
+  counterDisplay.innerHTML = `Pancake Stacks: ${Math.floor(counter)}`; // Update display with floored value
+
+  requestAnimationFrame(animate); // Request next frame
+}
+
+// Start the animation loop
+requestAnimationFrame(animate);
