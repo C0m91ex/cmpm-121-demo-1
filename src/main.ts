@@ -16,60 +16,64 @@ button.innerHTML = "🥞";
 app.append(button);
 
 // Create a counter display
-let counter: number = 0;
+let counter: number = 0; // Initialize counter
 const counterDisplay = document.createElement("div");
 counterDisplay.innerHTML = `Pancakes: ${counter}`;
 app.append(counterDisplay);
 
-// Create displays for the growth rate and purchased items
-let growthRate = 0;
-const growthRateDisplay = document.createElement("div");
-growthRateDisplay.innerHTML = `Growth rate: ${growthRate.toFixed(1)} pancakes/sec`;
-app.append(growthRateDisplay);
-
-// Track purchased items
-const purchases = { A: 0, B: 0, C: 0 };
-const purchasesDisplay = document.createElement("div");
-purchasesDisplay.innerHTML = `Items: A (${purchases.A}), B (${purchases.B}), C (${purchases.C})`;
-app.append(purchasesDisplay);
-
-// Function to update the displays
-function updateDisplays() {
-  counterDisplay.innerHTML = `Pancakes: ${Math.floor(counter)}`;
-  growthRateDisplay.innerHTML = `Growth rate: ${growthRate.toFixed(1)} pancakes/sec`;
-  purchasesDisplay.innerHTML = `Items: A (${purchases.A}), B (${purchases.B}), C (${purchases.C})`;
-}
-
 // Event listener to increment the counter on button click
 button.addEventListener("click", () => {
   counter += 1;
-  updateDisplays();
+  counterDisplay.innerHTML = `Pancakes: ${Math.floor(counter)}`;
 });
 
 // Variables for tracking time
 let lastTime: number = performance.now();
+let growthRate = 0;
 
-// Create upgrade buttons for A, B, and C
-const upgradeAButton = document.createElement("button");
-upgradeAButton.innerHTML = "Buy A (+0.1 pancakes/sec, Cost: 10)";
-upgradeAButton.disabled = true;
-app.append(upgradeAButton);
+// Create upgrade buttons
+const upgradeButtons = {
+  A: document.createElement("button"),
+  B: document.createElement("button"),
+  C: document.createElement("button")
+};
 
-const upgradeBButton = document.createElement("button");
-upgradeBButton.innerHTML = "Buy B (+2 pancakes/sec, Cost: 100)";
-upgradeBButton.disabled = true;
-app.append(upgradeBButton);
+// Button labels
+upgradeButtons.A.innerHTML = "💲 Buy A (+0.1/sec)";
+upgradeButtons.B.innerHTML = "💲 Buy B (+2/sec)";
+upgradeButtons.C.innerHTML = "💲 Buy C (+50/sec)";
 
-const upgradeCButton = document.createElement("button");
-upgradeCButton.innerHTML = "Buy C (+50 pancakes/sec, Cost: 1000)";
-upgradeCButton.disabled = true;
-app.append(upgradeCButton);
+// Disable buttons initially
+upgradeButtons.A.disabled = true;
+upgradeButtons.B.disabled = true;
+upgradeButtons.C.disabled = true;
 
-// Function to update the state of upgrade buttons
+// Append buttons to app
+app.append(upgradeButtons.A);
+app.append(upgradeButtons.B);
+app.append(upgradeButtons.C);
+
+// Initial prices for each item
+const prices = { A: 10, B: 100, C: 1000 };
+
+// Display current prices
+const priceDisplay = document.createElement("div");
+priceDisplay.innerHTML = `Prices: A: ${prices.A.toFixed(2)} pancakes, B: ${prices.B.toFixed(2)} pancakes, C: ${prices.C.toFixed(2)} pancakes`;
+app.append(priceDisplay);
+
+// Tracking purchases
+const purchases = { A: 0, B: 0, C: 0 };
+
+// Display purchases and growth rate
+const statusDisplay = document.createElement("div");
+statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} pancakes/sec. Purchases: A: ${purchases.A}, B: ${purchases.B}, C: ${purchases.C}`;
+app.append(statusDisplay);
+
+// Function to update upgrade button state
 function updateUpgradeButtons() {
-  upgradeAButton.disabled = counter < 10;
-  upgradeBButton.disabled = counter < 100;
-  upgradeCButton.disabled = counter < 1000;
+  upgradeButtons.A.disabled = counter < prices.A;
+  upgradeButtons.B.disabled = counter < prices.B;
+  upgradeButtons.C.disabled = counter < prices.C;
 }
 
 // Animation loop
@@ -79,7 +83,8 @@ function animate(time: number) {
 
   // Update the counter based on time elapsed
   counter += (growthRate * deltaTime) / 1000;
-  updateDisplays();
+  counterDisplay.innerHTML = `Pancakes: ${Math.floor(counter)}`;
+
   updateUpgradeButtons();
 
   requestAnimationFrame(animate);
@@ -88,30 +93,42 @@ function animate(time: number) {
 // Start the animation loop
 requestAnimationFrame(animate);
 
-// Event listeners for upgrade button purchases
-upgradeAButton.addEventListener("click", () => {
-  if (counter >= 10) {
-    counter -= 10;
+// Event listener for upgrade button purchases
+upgradeButtons.A.addEventListener("click", () => {
+  if (counter >= prices.A) {
+    counter -= prices.A;
     growthRate += 0.1;
     purchases.A += 1;
-    updateDisplays();
+    prices.A *= 1.15; // Increase price by 15%
+    counterDisplay.innerHTML = `Pancakes: ${Math.floor(counter)}`;
+    priceDisplay.innerHTML = `Prices: A: ${prices.A.toFixed(2)} pancakes, B: ${prices.B.toFixed(2)} pancakes, C: ${prices.C.toFixed(2)} pancakes`;
+    statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} pancakes/sec. Purchases: A: ${purchases.A}, B: ${purchases.B}, C: ${purchases.C}`;
+    updateUpgradeButtons();
   }
 });
 
-upgradeBButton.addEventListener("click", () => {
-  if (counter >= 100) {
-    counter -= 100;
+upgradeButtons.B.addEventListener("click", () => {
+  if (counter >= prices.B) {
+    counter -= prices.B;
     growthRate += 2.0;
     purchases.B += 1;
-    updateDisplays();
+    prices.B *= 1.15; // Increase price by 15%
+    counterDisplay.innerHTML = `Pancakes: ${Math.floor(counter)}`;
+    priceDisplay.innerHTML = `Prices: A: ${prices.A.toFixed(2)} pancakes, B: ${prices.B.toFixed(2)} pancakes, C: ${prices.C.toFixed(2)} pancakes`;
+    statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} pancakes/sec. Purchases: A: ${purchases.A}, B: ${purchases.B}, C: ${purchases.C}`;
+    updateUpgradeButtons();
   }
 });
 
-upgradeCButton.addEventListener("click", () => {
-  if (counter >= 1000) {
-    counter -= 1000;
-    growthRate += 50;
+upgradeButtons.C.addEventListener("click", () => {
+  if (counter >= prices.C) {
+    counter -= prices.C;
+    growthRate += 50.0;
     purchases.C += 1;
-    updateDisplays();
+    prices.C *= 1.15; // Increase price by 15%
+    counterDisplay.innerHTML = `Pancakes: ${Math.floor(counter)}`;
+    priceDisplay.innerHTML = `Prices: A: ${prices.A.toFixed(2)} pancakes, B: ${prices.B.toFixed(2)} pancakes, C: ${prices.C.toFixed(2)} pancakes`;
+    statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} pancakes/sec. Purchases: A: ${purchases.A}, B: ${purchases.B}, C: ${purchases.C}`;
+    updateUpgradeButtons();
   }
 });
