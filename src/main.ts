@@ -31,49 +31,45 @@ button.addEventListener("click", () => {
 let lastTime: number = performance.now();
 let growthRate = 0;
 
-// Create upgrade buttons with themed names
-const upgradeButtons = {
-  A: document.createElement("button"),
-  B: document.createElement("button"),
-  C: document.createElement("button")
-};
+// Array containing item data for upgrades
+const availableItems = [
+  { name: "Syrup Drip", emoji: "💲", rate: 0.1, cost: 10, purchases: 0 },
+  { name: "Pancake Chef", emoji: "👨‍🍳", rate: 2, cost: 100, purchases: 0 },
+  { name: "Pancake Factory", emoji: "🏭", rate: 50, cost: 1000, purchases: 0 },
+];
 
-// Themed button labels
-upgradeButtons.A.innerHTML = "💲 Buy Syrup Drip (+0.1 stacks/sec)";
-upgradeButtons.B.innerHTML = "💲 Buy Pancake Chef (+2 stacks/sec)";
-upgradeButtons.C.innerHTML = "💲 Buy Pancake Factory (+50 stacks/sec)";
+// Create elements for each upgrade button dynamically
+const itemButtons: HTMLButtonElement[] = [];
 
-// Disable buttons initially
-upgradeButtons.A.disabled = true;
-upgradeButtons.B.disabled = true;
-upgradeButtons.C.disabled = true;
+availableItems.forEach((item) => {
+  const upgradeButton = document.createElement("button");
+  upgradeButton.innerHTML = `${item.emoji} Buy ${item.name} (+${item.rate} stacks/sec)`;
+  upgradeButton.disabled = true;
+  app.append(upgradeButton);
+  itemButtons.push(upgradeButton);
+});
 
-// Append buttons to app
-app.append(upgradeButtons.A);
-app.append(upgradeButtons.B);
-app.append(upgradeButtons.C);
-
-// Initial prices for each item
-const prices = { A: 10, B: 100, C: 1000 };
-
-// Display current prices
+// Display current prices and growth rate
 const priceDisplay = document.createElement("div");
-priceDisplay.innerHTML = `Prices: Syrup Drip: ${prices.A.toFixed(2)} stacks, Pancake Chef: ${prices.B.toFixed(2)} stacks, Pancake Factory: ${prices.C.toFixed(2)} stacks`;
 app.append(priceDisplay);
 
-// Tracking purchases
-const purchases = { A: 0, B: 0, C: 0 };
-
-// Display purchases and growth rate
 const statusDisplay = document.createElement("div");
-statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} stacks/sec. Purchases: Syrup Drip: ${purchases.A}, Pancake Chef: ${purchases.B}, Pancake Factory: ${purchases.C}`;
 app.append(statusDisplay);
 
-// Function to update upgrade button state
-function updateUpgradeButtons() {
-  upgradeButtons.A.disabled = counter < prices.A;
-  upgradeButtons.B.disabled = counter < prices.B;
-  upgradeButtons.C.disabled = counter < prices.C;
+// Function to update upgrade button states and displays
+function updateUI() {
+  availableItems.forEach((item, index) => {
+    itemButtons[index].disabled = counter < item.cost;
+  });
+
+  priceDisplay.innerHTML = availableItems
+    .map(
+      (item) => `${item.name}: ${item.cost.toFixed(2)} stacks`
+    )
+    .join(", ");
+  
+  statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} stacks/sec. ` + 
+    availableItems.map(item => `${item.name}: ${item.purchases}`).join(", ");
 }
 
 // Animation loop
@@ -85,7 +81,7 @@ function animate(time: number) {
   counter += (growthRate * deltaTime) / 1000;
   counterDisplay.innerHTML = `Stacks of Pancakes: ${Math.floor(counter)}`;
 
-  updateUpgradeButtons();
+  updateUI();
 
   requestAnimationFrame(animate);
 }
@@ -93,42 +89,15 @@ function animate(time: number) {
 // Start the animation loop
 requestAnimationFrame(animate);
 
-// Event listener for upgrade button purchases
-upgradeButtons.A.addEventListener("click", () => {
-  if (counter >= prices.A) {
-    counter -= prices.A;
-    growthRate += 0.1;
-    purchases.A += 1;
-    prices.A *= 1.15; // Increase price by 15%
-    counterDisplay.innerHTML = `Stacks of Pancakes: ${Math.floor(counter)}`;
-    priceDisplay.innerHTML = `Prices: Syrup Drip: ${prices.A.toFixed(2)} stacks, Pancake Chef: ${prices.B.toFixed(2)} stacks, Pancake Factory: ${prices.C.toFixed(2)} stacks`;
-    statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} stacks/sec. Purchases: Syrup Drip: ${purchases.A}, Pancake Chef: ${purchases.B}, Pancake Factory: ${purchases.C}`;
-    updateUpgradeButtons();
-  }
-});
-
-upgradeButtons.B.addEventListener("click", () => {
-  if (counter >= prices.B) {
-    counter -= prices.B;
-    growthRate += 2.0;
-    purchases.B += 1;
-    prices.B *= 1.15; // Increase price by 15%
-    counterDisplay.innerHTML = `Stacks of Pancakes: ${Math.floor(counter)}`;
-    priceDisplay.innerHTML = `Prices: Syrup Drip: ${prices.A.toFixed(2)} stacks, Pancake Chef: ${prices.B.toFixed(2)} stacks, Pancake Factory: ${prices.C.toFixed(2)} stacks`;
-    statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} stacks/sec. Purchases: Syrup Drip: ${purchases.A}, Pancake Chef: ${purchases.B}, Pancake Factory: ${purchases.C}`;
-    updateUpgradeButtons();
-  }
-});
-
-upgradeButtons.C.addEventListener("click", () => {
-  if (counter >= prices.C) {
-    counter -= prices.C;
-    growthRate += 50.0;
-    purchases.C += 1;
-    prices.C *= 1.15; // Increase price by 15%
-    counterDisplay.innerHTML = `Stacks of Pancakes: ${Math.floor(counter)}`;
-    priceDisplay.innerHTML = `Prices: Syrup Drip: ${prices.A.toFixed(2)} stacks, Pancake Chef: ${prices.B.toFixed(2)} stacks, Pancake Factory: ${prices.C.toFixed(2)} stacks`;
-    statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} stacks/sec. Purchases: Syrup Drip: ${purchases.A}, Pancake Chef: ${purchases.B}, Pancake Factory: ${purchases.C}`;
-    updateUpgradeButtons();
-  }
+// Event listeners for upgrade button purchases
+availableItems.forEach((item, index) => {
+  itemButtons[index].addEventListener("click", () => {
+    if (counter >= item.cost) {
+      counter -= item.cost;
+      growthRate += item.rate;
+      item.purchases += 1;
+      item.cost *= 1.15; // Increase price by 15%
+      updateUI();
+    }
+  });
 });
