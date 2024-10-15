@@ -35,7 +35,7 @@ let growthRate = 0;
 const upgradeButtons = {
   A: document.createElement("button"),
   B: document.createElement("button"),
-  C: document.createElement("button")
+  C: document.createElement("button"),
 };
 
 // Button labels
