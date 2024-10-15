@@ -10,38 +10,38 @@ const header = document.createElement("h1");
 header.innerHTML = gameName;
 app.append(header);
 
-// Create a button with a pancake emoji
+// Create a main button with a pancake-related theme
 const button = document.createElement("button");
-button.innerHTML = "🥞";
+button.innerHTML = "🥞 Stack a Pancake!";
 app.append(button);
 
 // Create a counter display
 let counter: number = 0; // Initialize counter
 const counterDisplay = document.createElement("div");
-counterDisplay.innerHTML = `Pancakes: ${counter}`;
+counterDisplay.innerHTML = `Stacks of Pancakes: ${counter}`;
 app.append(counterDisplay);
 
 // Event listener to increment the counter on button click
 button.addEventListener("click", () => {
   counter += 1;
-  counterDisplay.innerHTML = `Pancakes: ${Math.floor(counter)}`;
+  counterDisplay.innerHTML = `Stacks of Pancakes: ${Math.floor(counter)}`;
 });
 
 // Variables for tracking time
 let lastTime: number = performance.now();
 let growthRate = 0;
 
-// Create upgrade buttons
+// Create upgrade buttons with themed names
 const upgradeButtons = {
   A: document.createElement("button"),
   B: document.createElement("button"),
-  C: document.createElement("button"),
+  C: document.createElement("button")
 };
 
-// Button labels
-upgradeButtons.A.innerHTML = "💲 Buy A (+0.1/sec)";
-upgradeButtons.B.innerHTML = "💲 Buy B (+2/sec)";
-upgradeButtons.C.innerHTML = "💲 Buy C (+50/sec)";
+// Themed button labels
+upgradeButtons.A.innerHTML = "💲 Buy Syrup Drip (+0.1 stacks/sec)";
+upgradeButtons.B.innerHTML = "💲 Buy Pancake Chef (+2 stacks/sec)";
+upgradeButtons.C.innerHTML = "💲 Buy Pancake Factory (+50 stacks/sec)";
 
 // Disable buttons initially
 upgradeButtons.A.disabled = true;
@@ -58,7 +58,7 @@ const prices = { A: 10, B: 100, C: 1000 };
 
 // Display current prices
 const priceDisplay = document.createElement("div");
-priceDisplay.innerHTML = `Prices: A: ${prices.A.toFixed(2)} pancakes, B: ${prices.B.toFixed(2)} pancakes, C: ${prices.C.toFixed(2)} pancakes`;
+priceDisplay.innerHTML = `Prices: Syrup Drip: ${prices.A.toFixed(2)} stacks, Pancake Chef: ${prices.B.toFixed(2)} stacks, Pancake Factory: ${prices.C.toFixed(2)} stacks`;
 app.append(priceDisplay);
 
 // Tracking purchases
@@ -66,7 +66,7 @@ const purchases = { A: 0, B: 0, C: 0 };
 
 // Display purchases and growth rate
 const statusDisplay = document.createElement("div");
-statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} pancakes/sec. Purchases: A: ${purchases.A}, B: ${purchases.B}, C: ${purchases.C}`;
+statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} stacks/sec. Purchases: Syrup Drip: ${purchases.A}, Pancake Chef: ${purchases.B}, Pancake Factory: ${purchases.C}`;
 app.append(statusDisplay);
 
 // Function to update upgrade button state
@@ -83,7 +83,7 @@ function animate(time: number) {
 
   // Update the counter based on time elapsed
   counter += (growthRate * deltaTime) / 1000;
-  counterDisplay.innerHTML = `Pancakes: ${Math.floor(counter)}`;
+  counterDisplay.innerHTML = `Stacks of Pancakes: ${Math.floor(counter)}`;
 
   updateUpgradeButtons();
 
@@ -100,9 +100,9 @@ upgradeButtons.A.addEventListener("click", () => {
     growthRate += 0.1;
     purchases.A += 1;
     prices.A *= 1.15; // Increase price by 15%
-    counterDisplay.innerHTML = `Pancakes: ${Math.floor(counter)}`;
-    priceDisplay.innerHTML = `Prices: A: ${prices.A.toFixed(2)} pancakes, B: ${prices.B.toFixed(2)} pancakes, C: ${prices.C.toFixed(2)} pancakes`;
-    statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} pancakes/sec. Purchases: A: ${purchases.A}, B: ${purchases.B}, C: ${purchases.C}`;
+    counterDisplay.innerHTML = `Stacks of Pancakes: ${Math.floor(counter)}`;
+    priceDisplay.innerHTML = `Prices: Syrup Drip: ${prices.A.toFixed(2)} stacks, Pancake Chef: ${prices.B.toFixed(2)} stacks, Pancake Factory: ${prices.C.toFixed(2)} stacks`;
+    statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} stacks/sec. Purchases: Syrup Drip: ${purchases.A}, Pancake Chef: ${purchases.B}, Pancake Factory: ${purchases.C}`;
     updateUpgradeButtons();
   }
 });
@@ -113,9 +113,9 @@ upgradeButtons.B.addEventListener("click", () => {
     growthRate += 2.0;
     purchases.B += 1;
     prices.B *= 1.15; // Increase price by 15%
-    counterDisplay.innerHTML = `Pancakes: ${Math.floor(counter)}`;
-    priceDisplay.innerHTML = `Prices: A: ${prices.A.toFixed(2)} pancakes, B: ${prices.B.toFixed(2)} pancakes, C: ${prices.C.toFixed(2)} pancakes`;
-    statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} pancakes/sec. Purchases: A: ${purchases.A}, B: ${purchases.B}, C: ${purchases.C}`;
+    counterDisplay.innerHTML = `Stacks of Pancakes: ${Math.floor(counter)}`;
+    priceDisplay.innerHTML = `Prices: Syrup Drip: ${prices.A.toFixed(2)} stacks, Pancake Chef: ${prices.B.toFixed(2)} stacks, Pancake Factory: ${prices.C.toFixed(2)} stacks`;
+    statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} stacks/sec. Purchases: Syrup Drip: ${purchases.A}, Pancake Chef: ${purchases.B}, Pancake Factory: ${purchases.C}`;
     updateUpgradeButtons();
   }
 });
@@ -126,9 +126,9 @@ upgradeButtons.C.addEventListener("click", () => {
     growthRate += 50.0;
     purchases.C += 1;
     prices.C *= 1.15; // Increase price by 15%
-    counterDisplay.innerHTML = `Pancakes: ${Math.floor(counter)}`;
-    priceDisplay.innerHTML = `Prices: A: ${prices.A.toFixed(2)} pancakes, B: ${prices.B.toFixed(2)} pancakes, C: ${prices.C.toFixed(2)} pancakes`;
-    statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} pancakes/sec. Purchases: A: ${purchases.A}, B: ${purchases.B}, C: ${purchases.C}`;
+    counterDisplay.innerHTML = `Stacks of Pancakes: ${Math.floor(counter)}`;
+    priceDisplay.innerHTML = `Prices: Syrup Drip: ${prices.A.toFixed(2)} stacks, Pancake Chef: ${prices.B.toFixed(2)} stacks, Pancake Factory: ${prices.C.toFixed(2)} stacks`;
+    statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} stacks/sec. Purchases: Syrup Drip: ${purchases.A}, Pancake Chef: ${purchases.B}, Pancake Factory: ${purchases.C}`;
     updateUpgradeButtons();
   }
 });
