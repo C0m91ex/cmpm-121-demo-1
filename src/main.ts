@@ -9,17 +9,20 @@ document.title = gameName;
 const header = document.createElement("h1");
 header.innerHTML = gameName;
 app.append(header);
+header.style.marginBottom = "20px"; 
 
 // Create a main button with a pancake-related theme
 const button = document.createElement("button");
 button.innerHTML = "🥞 Stack a Pancake!";
 app.append(button);
+button.style.marginBottom = "20px"; 
 
 // Create a counter display
 let counter: number = 0; // Initialize counter
 const counterDisplay = document.createElement("div");
 counterDisplay.innerHTML = `Stacks of Pancakes: ${counter}`;
 app.append(counterDisplay);
+counterDisplay.style.marginBottom = "20px"; 
 
 // Event listener to increment the counter on button click
 button.addEventListener("click", () => {
@@ -31,45 +34,90 @@ button.addEventListener("click", () => {
 let lastTime: number = performance.now();
 let growthRate = 0;
 
-// Array containing item data for upgrades
-const availableItems = [
-  { name: "Syrup Drip", emoji: "💲", rate: 0.1, cost: 10, purchases: 0 },
-  { name: "Pancake Chef", emoji: "👨‍🍳", rate: 2, cost: 100, purchases: 0 },
-  { name: "Pancake Factory", emoji: "🏭", rate: 50, cost: 1000, purchases: 0 },
+// Define the Item interface
+interface Item {
+  name: string;
+  emoji: string;
+  cost: number;
+  rate: number;
+  description: string; 
+}
+
+// Create available items
+const availableItems: Item[] = [
+  {
+    name: "Syrup Drip",
+    emoji: "🍯",
+    cost: 10,
+    rate: 0.1,
+    description: "A sweet syrup that drips onto your pancakes.",
+  },
+  {
+    name: "Pancake Chef",
+    emoji: "👨‍🍳",
+    cost: 100,
+    rate: 2.0,
+    description: "A skilled chef who cooks pancakes quickly.",
+  },
+  {
+    name: "Pancake Factory",
+    emoji: "🏭",
+    cost: 1000,
+    rate: 50.0,
+    description: "A factory that churns out pancakes at an increased rate.",
+  },
+  {
+    name: "Syrup River",
+    emoji: "🏞️",
+    cost: 5000,
+    rate: 200.0,
+    description: "A flowing river of syrup to enhance every pancake.",
+  },
+  {
+    name: "Pancake Palace",
+    emoji: "🏰",
+    cost: 10000,
+    rate: 500.0,
+    description: "A grand palace where pancakes are made to perfection.",
+  },
 ];
 
-// Create elements for each upgrade button dynamically
+// Create upgrade buttons and display descriptions
 const itemButtons: HTMLButtonElement[] = [];
-
 availableItems.forEach((item) => {
   const upgradeButton = document.createElement("button");
   upgradeButton.innerHTML = `${item.emoji} Buy ${item.name} (+${item.rate} stacks/sec)`;
   upgradeButton.disabled = true;
+
+  // Create a description element
+  const descriptionDisplay = document.createElement("div");
+  descriptionDisplay.innerHTML = `${item.description}`;
+  descriptionDisplay.style.fontSize = "0.8em"; 
+  descriptionDisplay.style.marginBottom = "10px"; 
+  app.append(descriptionDisplay);
+
   app.append(upgradeButton);
   itemButtons.push(upgradeButton);
+  upgradeButton.style.marginBottom = "10px"; 
 });
 
-// Display current prices and growth rate
-const priceDisplay = document.createElement("div");
-app.append(priceDisplay);
+// Initial prices
+const prices: number[] = availableItems.map(item => item.cost);
 
+// Tracking purchases
+const purchases: number[] = new Array(availableItems.length).fill(0);
+
+// Display purchases and growth rate
 const statusDisplay = document.createElement("div");
+statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} stacks/sec. Purchases: ${availableItems.map(item => `${item.name}: 0`).join(", ")}`;
 app.append(statusDisplay);
+statusDisplay.style.marginTop = "20px"; 
 
-// Function to update upgrade button states and displays
-function updateUI() {
-  availableItems.forEach((item, index) => {
-    itemButtons[index].disabled = counter < item.cost;
+// Function to update upgrade button state
+function updateUpgradeButtons() {
+  itemButtons.forEach((button, index) => {
+    button.disabled = counter < prices[index];
   });
-
-  priceDisplay.innerHTML = availableItems
-    .map(
-      (item) => `${item.name}: ${item.cost.toFixed(2)} stacks`
-    )
-    .join(", ");
-  
-  statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} stacks/sec. ` + 
-    availableItems.map(item => `${item.name}: ${item.purchases}`).join(", ");
 }
 
 // Animation loop
@@ -81,7 +129,7 @@ function animate(time: number) {
   counter += (growthRate * deltaTime) / 1000;
   counterDisplay.innerHTML = `Stacks of Pancakes: ${Math.floor(counter)}`;
 
-  updateUI();
+  updateUpgradeButtons();
 
   requestAnimationFrame(animate);
 }
@@ -89,15 +137,17 @@ function animate(time: number) {
 // Start the animation loop
 requestAnimationFrame(animate);
 
-// Event listeners for upgrade button purchases
-availableItems.forEach((item, index) => {
-  itemButtons[index].addEventListener("click", () => {
-    if (counter >= item.cost) {
-      counter -= item.cost;
-      growthRate += item.rate;
-      item.purchases += 1;
-      item.cost *= 1.15; // Increase price by 15%
-      updateUI();
+// Event listener for upgrade button purchases
+itemButtons.forEach((button, index) => {
+  button.addEventListener("click", () => {
+    if (counter >= prices[index]) {
+      counter -= prices[index];
+      growthRate += availableItems[index].rate; 
+      purchases[index] += 1;
+      prices[index] *= 1.15; 
+      counterDisplay.innerHTML = `Stacks of Pancakes: ${Math.floor(counter)}`;
+      statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} stacks/sec. Purchases: ${availableItems.map((item, i) => `${item.name}: ${purchases[i]}`).join(", ")}`;
+      updateUpgradeButtons();
     }
   });
 });
