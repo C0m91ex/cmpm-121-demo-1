@@ -14,7 +14,7 @@ header.style.marginBottom = "20px";
 // Create a main button with a pancake-related theme
 const button = document.createElement("button");
 button.innerHTML = "🥞 Stack a Pancake!";
-button.classList.add("main-action"); 
+button.classList.add("main-action");
 app.append(button);
 button.style.marginBottom = "20px";
 
