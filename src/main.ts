@@ -9,20 +9,21 @@ document.title = gameName;
 const header = document.createElement("h1");
 header.innerHTML = gameName;
 app.append(header);
-header.style.marginBottom = "20px"; 
+header.style.marginBottom = "20px";
 
 // Create a main button with a pancake-related theme
 const button = document.createElement("button");
 button.innerHTML = "🥞 Stack a Pancake!";
+button.classList.add("main-action"); 
 app.append(button);
-button.style.marginBottom = "20px"; 
+button.style.marginBottom = "20px";
 
 // Create a counter display
 let counter: number = 0; // Initialize counter
 const counterDisplay = document.createElement("div");
 counterDisplay.innerHTML = `Stacks of Pancakes: ${counter}`;
 app.append(counterDisplay);
-counterDisplay.style.marginBottom = "20px"; 
+counterDisplay.style.marginBottom = "20px";
 
 // Event listener to increment the counter on button click
 button.addEventListener("click", () => {
@@ -40,7 +41,7 @@ interface Item {
   emoji: string;
   cost: number;
   rate: number;
-  description: string; 
+  description: string;
 }
 
 // Create available items
@@ -92,26 +93,26 @@ availableItems.forEach((item) => {
   // Create a description element
   const descriptionDisplay = document.createElement("div");
   descriptionDisplay.innerHTML = `${item.description}`;
-  descriptionDisplay.style.fontSize = "0.8em"; 
-  descriptionDisplay.style.marginBottom = "10px"; 
+  descriptionDisplay.style.fontSize = "0.8em";
+  descriptionDisplay.style.marginBottom = "10px";
   app.append(descriptionDisplay);
 
   app.append(upgradeButton);
   itemButtons.push(upgradeButton);
-  upgradeButton.style.marginBottom = "10px"; 
+  upgradeButton.style.marginBottom = "10px";
 });
 
 // Initial prices
-const prices: number[] = availableItems.map(item => item.cost);
+const prices: number[] = availableItems.map((item) => item.cost);
 
 // Tracking purchases
 const purchases: number[] = new Array(availableItems.length).fill(0);
 
 // Display purchases and growth rate
 const statusDisplay = document.createElement("div");
-statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} stacks/sec. Purchases: ${availableItems.map(item => `${item.name}: 0`).join(", ")}`;
+statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} stacks/sec. Purchases: ${availableItems.map((item) => `${item.name}: 0`).join(", ")}`;
 app.append(statusDisplay);
-statusDisplay.style.marginTop = "20px"; 
+statusDisplay.style.marginTop = "20px";
 
 // Function to update upgrade button state
 function updateUpgradeButtons() {
@@ -142,9 +143,9 @@ itemButtons.forEach((button, index) => {
   button.addEventListener("click", () => {
     if (counter >= prices[index]) {
       counter -= prices[index];
-      growthRate += availableItems[index].rate; 
+      growthRate += availableItems[index].rate;
       purchases[index] += 1;
-      prices[index] *= 1.15; 
+      prices[index] *= 1.15;
       counterDisplay.innerHTML = `Stacks of Pancakes: ${Math.floor(counter)}`;
       statusDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} stacks/sec. Purchases: ${availableItems.map((item, i) => `${item.name}: ${purchases[i]}`).join(", ")}`;
       updateUpgradeButtons();
